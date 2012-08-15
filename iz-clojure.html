@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Clojure:</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/theme/default.css">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet"rel href="lib/css/zenburn.css">
+
+  </head>
+  <body>
+    <div class="reveal">
+
+      <!-- Used to fade in a background when a specific slide state is reached -->
+      <div class="state-background"></div>
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+        <h1>( for :clojure )</h1>
+          <h3>How to Dodge Falling Prices in a Stateless World</h3>
+          <img width="340" height="225" src="media/falling-prices.jpeg">
+        </section>
+
+        <section>
+          <h2>(what-is? :clojure)</h2>
+          <ul>
+            <li>it's a creation of Rich Hickey (circa 2007)</li>
+            <li>it's a Lisp</li>
+            <li>it's a Functional language</li>
+            <li>it's a Java Virtual Machine (JVM) language</li>
+            <li>it's a concurrent language</li>
+            <li>it's open source (Clojure and Java code)</li>
+            <li>influenced by Common Lisp, Erlang, Haskell, ML, Prolog, Scheme, Java</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>(who-is? "Rich Hickey")</h2>
+          <ul>
+            <li>Independent software dude</li>
+            <li>
+            RailsConf 2012 Keynote: "Simplicity Matters"
+            http://www.youtube.com/watch?v=rI8tNMsozo0
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>(clojure (is :lisp))</h2>
+          <section>
+          <ul>
+            <li>Syntax uses Prefix (rather than Infix) notation</li>
+            <pre><code contenteditable>
+              ;; functions precede arguments
+              (+ 1 2)
+
+              ;; operators do too
+              (+ 1 2 3 4 5 6)
+            </code></pre>
+            <li>Code is Data (List)</li>
+            <pre><code contenteditable>
+              ;; and lists of lists!
+              (dec (+ 1 2 3))
+
+              ;; and list that don't eval
+              '(1 2 3 4)
+            </code></pre>
+            <li>Macros!</li>
+          </ul>
+          </section>
+          <section>
+            <p>Parenthesis ... and a few brackets and curlies too</p>
+            <pre><code contenteditable>
+            ;; define a vector var with a literal
+            (def v [1 2 3 4])
+
+            ;; define a map with a literal
+            (def m { :one 1 :two 2 :three 3 })
+            </code></pre>
+          </section>
+        </section>
+
+        <section>
+          <h2>(clojure (is :functional))</h2>
+          <section>
+            <p>verb (function) oriented instead of noun (object) oriented</p>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>functions can be called and defined</p>
+            <pre><code contenteditable>
+              ;; define a function
+              (defn walmart-greeting []
+                "watch out for falling prices!")
+
+              ;; call a function
+              (walmart-greeting)
+            </code></pre>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>functions can be returned from functions</p>
+            <pre><code contenteditable>
+              ;; define a function that returns a function
+              (defn walmart-greeting [] 
+                (fn [] "watch out for falling prices!"))
+
+              ;; get it and bind it
+              (def greet-me (walmart-greeting))
+
+              ;; call it!
+              (greet-me)
+            </code></pre>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>functions can be arguments to functions</p>
+            <pre><code contenteditable>
+              ;; create a higher order function
+              (defn greet-me [greeter] (greeter))
+
+              ;; call it with an anonymous function
+              (greet-me (fn [] "watch out for falling prices!"))
+            </code></pre>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>looping and iteration via recursive function calls</p>
+            <pre><code contenteditable>
+              ;; return a sequence of falling prices
+              (defn falling-prices [result x]
+                (if (zero? x)
+                  result
+                  (recur (conj result x) (dec x))))
+
+              ;; make it happen
+              (falling-prices [] 5)
+            </code></pre>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>lexical scoping / closures</p>
+            <pre><code contenteditable>
+              ;; create a function that closes over local name
+              (defn make-greeting [place]
+                (let [walmart place]
+                  (fn [welcome-to] 
+                    (str welcome-to walmart))))
+
+              ;; bind it
+              (def greeting (make-greeting "Walmart!"))
+
+              ;; call it
+              (greeting "Welcome to ")
+
+            </code></pre>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <p>IMMUTABLE...but more on that later...</p>
+          </section>
+
+        </section>
+
+        <section>
+          <section>
+            <h2>(clojure (is :jvm-enabled))</h2>
+            <ul>
+              <li><strong>compiles</strong> to Java bytecode</li>
+              <li>run time performance comparable to Java</li>
+              <li>seamless interop with Java and other JVM languages</li>
+            </ul>
+            <pre><code contenteditable>
+            ;; use java.lang.Math#sqrt static method
+            (Math/sqrt 9)
+
+            ;; instantiate Java objects
+            (java.awt.Point. 10 20)
+
+            ;; and call instance methods on them
+            (.x (java.awt.Point. 10 20))
+
+            ;; with parameters even
+            (.divide (java.math.BigDecimal. "42") 2M)
+            </code></pre>
+          </section>
+          <section>
+            <p>Oh and by the way...</p>
+            <ul>
+              <li>works with .NET (ClojureCLR)</li>
+              <li>can compile to JavaScript (ClojureScript)</li>
+              <li>runs on the ActionScript VM (las3r)</li>
+              <li>python flavor too (clojure-py)
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h2>(clojure (is :concurrent))</h2>
+        </section>
+
+        <section>
+          <section>
+            <h3>A Parallel Universe</h3>
+            <ul>
+              <li>Divide work</li>
+              <li>Take advantage multiple of cores and CPUs</li>
+            </ul>
+          </section>
+          <section data-state="blackout">
+            <p>Life doesn't run on a single thread of execution</p>
+            <img width="700" height="500" border="0" src="media/sperm_race.jpeg">
+          </section>
+          <section>
+            <ol>
+              <li>Reading inconsistent data</li>
+              <li>Losing updates (ie. updating inconsistent data)</li>
+            </ol>
+            <ul>
+              <li><strong>Dirty Reads</strong></li>
+              <ul>
+                <li>Read-Write</li>
+                <li>a thread reads data that another thread is updating</li>
+                <li>when the update is finished, data is no longer valid</li>
+              </ul>
+              <li><strong>Phantom Reads</strong></li>
+              <ul>
+                <li>Read-Write</li>
+                <li>a thread reads data that's been deleted</li>
+              </ul>
+              <li><strong>Lost Updates</strong></li>
+              <ul>
+                <li>Write-Write</li>
+                <li>update by one thread overwritten by other</li>
+                <li>Ex. two threads updating a counter</li>
+              </ul>
+            </ul>
+          </section>
+        </section>
+
+        <section data-state="alert">
+          <h2>So there are problems ...</h2>
+          <img width="700" height="400" border="0" src="media/mutants.jpeg"/>
+        </section>
+
+        <section>
+          <h3>Are there answers ?</h3>
+          <img width="641" height="530" src="media/tmnt.jpeg"/>
+        </section>
+
+        <section>
+          <section>
+            <h2>Locks!</h2>
+            <p>problem solved by locking shared state before mutation</p>
+            <img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+          </section>
+
+          <section>
+            <h4>Locks create blocks</h4>
+            <ul>
+              <li>lose concurrency / throughput</li>
+              <li>wasteful, excessive, and pessimistic</li>
+              <li>even for simple reads, must obtain a lock</li>
+            </ul>
+          </section>
+
+          <section>
+            <h4>Locks complect code</h4>
+            <ul>
+              <li>complexity of code proportional to # of locks needed</li>
+              <li>developers must remember to use them</li>
+              <li>and in which order to lock and release</li>
+              <li>bugs due to missing locks can be hard to track down</li>
+              <li>complexity costs time and money</li>
+              <li>a thread must obtain multiple locks to make coordinated changes</li>
+            </ul>
+          </section>
+
+          <section>
+            <h4>Locks cause conflicts / contention</h4>
+            <ul>
+              <li>Deadlock</li>
+              <li>Starvation</li>
+              <li>Orphan Locks</li>
+            </ul>
+          </section>
+
+        </section>
+
+        <section>
+          <h2>A conflated idea</h2>
+          <p>
+          The greatest trick that OO languages ever pulled
+          was convincing the world that identity is the same as state
+          </p>
+          <p class="fragment">
+          <i>OOP thinks in terms of stateful "things" with destructive methods</i>
+          </p>
+        </section>
+
+        <section>
+
+          <section>
+            <h3>A Reinvention</h3>
+            <img width="364" height="330" src="media/nwo.jpg">
+            <ul>
+              <li>Separation of <strong>state</strong> and <strong>identity</strong>
+              <li>Immutable things that don't change once created</li>
+              <li>Simulate change by creating new things</li>
+              <li>Identities reference different things over time</li>
+            </ul>
+          </section>
+
+          <section>
+            <img width="801" height="465" src="media/state-diagram.png" alt="Down arrow">
+          </section>
+
+        </section>
+
+        <section>
+          <h3>Two Ideas Toward a Solution</h3>
+          <ol>
+            <li>Data objects must be immutable</li>
+            <ul>
+              <li>if identity is updated, other threads have access to old (albeit stale) data
+            </ul>
+            <li>Identities only given indirect access to memory via managed references</li>
+            <ul>
+              <li>Language runtime can provide constructs to:</li>
+              <li>ensure safe writes to shared data</li>
+              <li>signal errors when writes fail</li>
+              <li>enforce other constraints when writes are made</li>
+            </ul>
+          </ol>
+        </section>
+
+        <section>
+          <h3>The Clojure Way</h3>
+          <ol>
+            <li>All core Clojure data structures are immutable</li>
+            <li>Managed References</li>
+            <ul>
+              <li>Manage access to shared (volatile) memory</li>
+            </ul>
+            <li>Software Transactional Memory (STM)</li>
+            <ul>
+              <li>Concurrency control mechanism 
+              <li>Uses transactions, similar to Databases</li>
+              <li>Multiversion Concurrency Control (MVCC)</li>
+              <ul>
+                <li>Readers don't block readers or writers</li>
+                <li>Writers don't block readers</li>
+              </ul>
+              <li>No need for locks</li>
+              <li>Optimistic approach, provides increased concurrency</li>
+            </ul>
+          </ol>
+        </section>
+
+        <section>
+          <h3>STM is ACID. Sort of.</h3>
+          <ul>
+            <li>
+              <strong>(A)tomic:</strong>
+              <p>
+                All changes happen, or the transaction fails and retries. Coordinated changes on 
+                multiple identities
+              </p>
+            </li>
+            <li>
+              <strong>(C)onsistent:</strong>
+              <p>provides validator functions to check consistency of data and rollback transaction on failure</p>
+            </li>
+            <li>
+              <strong>(I)solated:</strong>
+              <p>mutated data within a transaction is only visible to the thread that made the change</p>
+            </li>
+            <li>
+              <strong>(D)urable:</strong>
+              <p>Not Applicable</p>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Managed Reference Primitives</h3>
+          <p>Represent <i>identities</i> that change <i>values</i> over <i>time</i></p>
+          <ol>
+            <li>Ref (shared, synchronous, coordinated)</li>
+            <li>Agent (shared, asynchronous, independent)</li>
+            <li>Atom (shared, synchronous, independent)</li>
+            <li>Var (thread-local / isolated)</li>
+          </ol>
+        </section>
+
+        <section data-state="blackout">
+          <h2>Refs</h2>
+          <img width="277" height="500" src="media/referee_1.gif">
+        </section>
+
+        <section>
+          <p>Shared, synchronous, and coordinated changes</p>
+          <pre><code contenteditable>
+            ;; create the ref
+            (def foreclosed-homes (ref {}))
+
+            ;; deref the ref with a handy little macro
+            @foreclosed-homes
+          </code></pre>
+          <ul>
+            <li>Mutation must occur within an STM transaction</li>
+            <li>Mutate with REF-SET, ALTER, and COMMUTE functions</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>ref-set</h3>
+          <ul>
+            <li>(ref-set ref new-value)</li>
+            <li>set the ref to the new value</li>
+            <li>needs a transaction; or exception thrown</li>
+            <li>handy when new val doesn't depend on old</li>
+          </ul>
+          <pre><code contenteditable>
+            ;; create transaction with the 'dosync' macro
+            (dosync
+              (ref-set foreclosed-homes {}))
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>alter</h3>
+          <ul>
+            <li>(alter ref function & args)</li>
+            <li>atomic op for common read-process-write scenario</li>
+          </ul>
+          <pre><code contenteditable>
+
+            ;; create new buyer
+            (defn new-buyer [id login bid]
+              {:id id
+               :login login
+               :net-worth net-worth})
+
+            (defn add-buyer [login bid]
+              (dosync
+                (let [counter (count @buyers)
+                     buyer (new-buyer (inc counter) login bid)]
+                  (alter buyers assoc login buyer))))
+          </code></pre>
+        </section>
+
+        <section data-state="blackout">
+          <h2>Agents</h2>
+          <img width="700" height="321" src="media/agentsmith.jpeg">
+        </section>
+
+        <section>
+          <p>Shared, asynchronous, and independent changes</p>
+          <pre><code contenteditable>
+            ;; create the agent
+            (def kungfu-skill-level (agent 0))
+
+            ;; deref the agent with a handy little macro
+            @kungfu-skill-level
+          </code></pre>
+          <ul>
+            <li>Does not need to be wrapped in an STM transaction</li>
+            <li>Mutate with SEND and SEND-OFF functions</li>
+            <li>An "Action" processes the new value on a separate thread</li>
+            <li>Multiple Agents can coordinate via AWAIT and AWAIT-FOR</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>More about Actions</h3>
+          <ul>
+            <li>Plain Clojure func that can accept a variable # of args</li>
+            <li>Run on a (Java) thread pool</li>
+            <li>One Action per Agent at a given time</li>
+            <li>Derefing an Agent before Action completes, yields old val</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>send</h3>
+          <ul>
+            <li>(send the-agent the-action & more-args)</li>
+            <li>uses a fixed size thread pool</li>
+            <li>non-blocking</li>
+            <li>actions are queued if pool is exhausted</li>
+            <li>for CPU heavy actions that don't block</li>
+          </ul>
+          <pre><code contenteditable>
+            (send kungfu-skill-level + 1000)
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>send-off</h3>
+          <ul>
+            <li>(send-off the-agent the-action & more-args)</li>
+            <li>same as send, but can handle blocking actions</li>
+            <li>dynamic thread pool</li>
+          </ul>
+          <pre><code contenteditable>
+            (send-off kungfu-skill-level + 1000)
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>Ants!</h3>
+          <h4> by Rich Hickey</h4>
+          <ol>
+            <li>a square world of cells</li>
+            <li>each cell holds a Ref to what it contains (food, ant, pheromones, home base)</li>
+            <li>Ants are represented by Agents</li>
+            <li>Ants are sent "behave" Actions</li>
+            <ul>
+              <li>picks a random thing for ant to do (move, turn, grab, drop food)</li>
+              <li>muutates the world of cells via a transaction
+              <li>sends itself another behave action</li>
+            </ul>
+            <li>An Agent paints the world
+            <li>An Agent evaporates the pheromones</li>
+          </ol>
+        </section>
+
+        <section>
+        <h2>Sources and Material</h2>
+        <ol>
+          <li><i>Clojure in Action</i>, 2011 (Amit Rathore)</li>
+          <li><i>The Joy of Clojure</i>, 2011 (Michael Fogus, Chris Houser)
+          <li><a href="http://www.clojure.org/">http://www.clojure.org/</a></li>
+          <li><a href="http://clojuredocs.org/">http://clojuredocs.org/</a></li>
+          <li><a href="http://www.4clojure.com/">http://www.4clojure.com/</a></li>
+          <li>#clojure (irc.freenode.net)</li>
+        </ol>
+        </section>
+
+        <section>
+          <h2>(END)</h2>
+          <img width="801" height="465" src="media/seuss.jpeg">
+        </section>
+
+      </div>
+
+      <!-- The Navigation controls UI -->
+      <aside class="controls">
+        <a class="left" href="#">&#x25C4;</a>
+        <a class="right" href="#">&#x25BA;</a>
+        <a class="up" href="#">&#x25B2;</a>
+        <a class="down" href="#">&#x25BC;</a>
+      </aside>
+
+      <!-- Presentation progress bar -->
+      <div class="progress"><span></span></div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+
+    <script>
+      head.ready( function() {
+        // Fires when a slide with data-state=customevent is activated
+        Reveal.addEventListener('customevent', function() {
+          console.log('"customevent" has fired');
+        });
+
+        // Fires each time a new slide is activated
+        Reveal.addEventListener( 'slidechanged', function( event ) {
+          //event.previousSlide, event.currentSlide, event.indexh, event.indexv
+        });
+
+        Reveal.initialize({
+          controls: true,
+          progress: true,
+          history: true,
+          transition: 'default' || 'default' // default/cube/page/concave/linear(2d)
+        });
+
+        // Load highlight.js for syntax highlighting of code samples
+        head.js( 'lib/js/highlight.js', function() {
+          hljs.initHighlightingOnLoad();
+        });
+
+      } );
+
+      // Scripts that should be loaded before initializing
+      var scripts = [];
+
+      // If the browser doesn't support classList load a polyfill
+      if( !document.body.classList ) {
+        head.js( 'lib/js/classList.js' );
+      }
+
+      // Load markdown parser if there are slides defined using markdown
+      if( document.querySelector( '[data-markdown]' ) ) {
+        scripts.push( 'lib/js/showdown.js' );
+        scripts.push( 'lib/js/data-markdown.js' );
+      }
+
+      scripts.push( 'js/reveal.min.js' );
+
+      // If running the notes server, include some additional JS
+      if( window.location.host == 'localhost:1947' ) {
+        scripts.push( 'socket.io/socket.io.js' );
+        scripts.push( 'plugin/speakernotes/client.js' );
+      }
+
+      // Load the scripts and, when completed, initialize reveal.js
+      head.js.apply( null, scripts);
+
+    </script>
+
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
